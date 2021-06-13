@@ -1,7 +1,5 @@
 
 var      dbConn = require('../../config/db.config');
-const    bcrypt = require("bcrypt");
-const    saltRound = 10 ;
 
   var taskList = function(task){
 
@@ -22,9 +20,11 @@ const    saltRound = 10 ;
         result(null , err);
     }
     else{
-        console.log("allEmployees fetched successfully");
+        console.log("allEmployees fetched successfullyzzz");
         result(null , res);
-      // result.json({taskData:res})  ; 
+    //  res.json({ success: 200,taskData:res})  ; 
+       // result.send(200).send({success : 200, data : res});
+
        }
   })
  }
@@ -32,16 +32,14 @@ const    saltRound = 10 ;
  // 
  taskList.tasks = ( status,result)=>{
    dbConn.query(  "SELECT * FROM  taskmanagement WHERE taskStatus =?",[status] ,(err,res)=>{
-
-  //  dbConn.query("SELECT * FROM taskmanagement where taskStatus = `${data}`"  , (err , res )=>{
     if(err)
     {
         console.log("error while fetching  status task data");
-        result( err);
+        result(null , err);
     }
     else{
-        console.log("all  taks with status fetched successfully");
-        result(res);  
+        console.log("all  task with status fetched successfully");
+        result( null , res);  
        }
   })
  }

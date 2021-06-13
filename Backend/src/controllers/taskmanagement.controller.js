@@ -14,46 +14,35 @@ exports.getAllTaskList = (req , res)=>{
 
             if(taskList == "")
             {  
-                console.log('Empty Database ' , TaskList);
+                console.log('Empty Database ' , taskList);
                 res.json({status: 404 , message :'Empty Database', })   
             }
 
-            if(taskList !=""){
-               console.log('taskList' , taskList);
-             //  res.send(taskList);
-                res.json({status: 200 , taskData :taskList, })   
+            if(taskList){
+               console.log('taskListzzz' , taskList);
+                res.send(taskList);
+                //res.json({status: 200 , taskData :taskList, })   
 
             }
     })
 }
 
 
-//  get all open  Task 
-exports.tasks =(req , res )=>{
+//  get all  Task  by status
+exports.tasks = async(req , res)=>{
+   
+              TaskModel.tasks(req.params.status, (err , task)=>{
+                   if(err){
+                      res.send(err);
+                   }
+                   else{
+                      res.send(task)
+                       
+                   }
+             })
+      
+}
 
-    if(req.params.name === Object && Object.keys(req.body).length === 0)
-    {
-        res.send(400).send({success : 400, message : 'Please provide data properly'});
-    }
-    else
-    {
-         TaskModel.tasks(req.params.status, (err , task)=>{
-         if(err){
-            res.send(err);
-         }
-         else{
-            if(task =""){
-                 res.json({status : 404 , message : ' Task  not found ' , taskId: task.insertId});  
-            }else{
-               // res.json({success : 200 , TASK : task, }); 
-                 // res.send(task) ;
-                res.json({status: 200 , taskData :task, })   
-
-                }
-           } 
-        });
-    }
-} 
 
 //  get all open  Task 
 exports.updateStatus =(req , res )=>{
@@ -69,11 +58,11 @@ exports.updateStatus =(req , res )=>{
             res.send(err);
          }
          else{
-            if(data =""){
+            if(data ==""){
                  res.json({status : 500 , message : ' Server Error' });  
             }else{
               
-                res.json({status: 200 })   
+                res.json({status: 200, Data:data})   
 
                 }
            } 
@@ -118,13 +107,12 @@ exports.updateTask =(req , res )=>{
     }
     else
     {
-       
          TaskModel.updateTask(req.params.id , taskReqData , (err , task)=>{
          if(err){
             res.send(err);
          }
          else{
-            if(task =""){
+            if(task ==""){
                  res.json({success : 404 , message : ' Task not found ' , taskId: task.insertId});  
             }else{
                 res.json({success : 200 , message : 'Task updated successfully ' , taskId: task.insertId});  
@@ -141,7 +129,7 @@ exports.deleteTask =(req , res )=>{
       
         TaskModel.deleteTask(req.params.id  , (err , task)=>{
             if(err){
-                res.send(err);
+              
                 res.json({success : 500 , message : ' Error while deleting task ' , taskId: task.insertId});   
             }else{
            
